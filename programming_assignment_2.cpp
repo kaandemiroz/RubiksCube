@@ -107,7 +107,7 @@ enum {xoff = 1, yoff = 4, zoff = 16};
 GLuint GlobalModelView, ModelView, Projection;
 GLuint selectedFace = 0;
 mat3 faces[6] = {
-	mat3(0,1,2,3,4,5,6,7,8),			// Front
+	mat3(0,1,2,3,4,5,6,7,8),		// Front
 	mat3(18,19,20,9,10,11,0,1,2),		// Top
 	mat3(2,11,20,5,14,23,8,17,26),		// Left
 	mat3(18,9,0,21,12,3,24,15,6),		// Right
@@ -140,7 +140,7 @@ void quad(int a, int b, int c, int d, color4 color){
 	linepoints[LineIndex] = vertices[d]; LineIndex++;
 }
 
-// Construct a cube piece by combining 6 faces of different colors in different locations
+// Construct a cube piece by combining 6 faces of different colors on different sides
 void cubepiece(int x, int y, int z){
 	int index = x * xoff + y * yoff + z * zoff;
 	// Front (Red)
@@ -157,7 +157,7 @@ void cubepiece(int x, int y, int z){
 	quad(index + zoff, index + xoff + zoff, index + yoff + zoff, index + xoff + yoff + zoff, color4(0.8, 0.0, 0.8, 1.0));
 }
 
-// Construct a Rubik's Cube using 9 smaller cube pieces
+// Construct a Rubik's Cube using 27 smaller cube pieces
 void rubikscube(){
 	glLineWidth(10);
 	for(int z=0; z<3; z++){
@@ -169,6 +169,7 @@ void rubikscube(){
 	}
 }
 
+// Rotate random faces 100 times to randomize the cube's configuration.
 void randomizeCube(){
 	int oldSelectedFace = selectedFace;
 	int oldT = t;
@@ -185,6 +186,7 @@ void randomizeCube(){
 	t = oldT;
 }
 
+// Returns true if a face contains a specific cube piece
 bool contains(mat3 face, int cubeID){
 	for(int i=0; i<3; i++){
 		for(int j=0; j<3; j++){
@@ -239,6 +241,7 @@ void init(){
 	glEnable( GL_DEPTH_TEST );
 }
 
+// OpenGL display function
 void display(void){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	mat4 animation[27];
@@ -360,6 +363,7 @@ vec3 trackball_ptov(int x, int y, int width, int height){
 	return v;
 }
 
+// Rotate the Rubik's Cube as a whole
 void rotate(int x, int y){
 	vec3 curPos = trackball_ptov(x, y, width, height);
 	if(trackingMouse || selected){
